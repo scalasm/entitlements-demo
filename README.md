@@ -18,7 +18,7 @@ Open the graphiql console at `http://localhost:8080/graphiql` and have fun!
 
 # Sample queries
 
-```
+```graphql
 // Get all students
 query {
   accounts(criteria: {

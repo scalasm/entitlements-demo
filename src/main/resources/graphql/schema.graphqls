@@ -1,0 +1,23 @@
+enum AccountType {
+    DISTRICT
+    SCHOOL
+    CLASS
+    GROUP
+    INDIVIDUAL
+}
+
+type Account {
+    id: ID!
+    name: String!
+    type: AccountType!
+}
+
+input AccountInput {
+    name: String
+    type: AccountType
+}
+
+type Query {
+    accounts(criteria: AccountInput): [Account]!
+    account(id: ID!): Account
+}

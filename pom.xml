@@ -28,10 +28,10 @@
 		</developer>
 	</developers>
 	<scm>
-		<connection>git@github.com:scalasm/entitlements-demo.git</connection>
-		<developerConnection/>
+		<url>https://github.com/scalasm/entitlements-demo</url>
+		<connection>scm:git:git@github.com:scalasm/entitlements-demo.git</connection>
+		<developerConnection>scm:git:git@github.com:scalasm/entitlements-demo.git</developerConnection>
 		<tag/>
-		<url/>
 	</scm>
 	<properties>
 		<java.version>21</java.version>

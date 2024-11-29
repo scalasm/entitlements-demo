@@ -1,7 +1,9 @@
 package me.marioscalas.edemo.account;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -26,6 +28,7 @@ public class Account {
     private String name;
     private AccountType type;
 
-    @OneToMany(mappedBy = "source")
-    private List<AccountRelationship> relationships;
+    @OneToMany(mappedBy = "source", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<AccountRelationship> relationships = new ArrayList<>();
 }

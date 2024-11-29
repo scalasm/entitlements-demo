@@ -14,7 +14,9 @@ type Account {
 }
 
 enum RelationshipType {
-    IS_PART_OF
+    HAS,
+    IS_STUDENT,
+    IS_TEACHER
 }
 
 type AccountRelationship {

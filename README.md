@@ -19,7 +19,7 @@ Open the graphiql console at `http://localhost:8080/graphiql` and have fun!
 # Sample queries
 
 ```graphql
-// Get all students
+// Get all district account and its immediate relationships 
 query {
   accounts(criteria: {
     type: DISTRICT
@@ -29,7 +29,30 @@ query {
     type
   }
 }
+```
 
+```graphql
+// Get relationships too
+query {
+  accounts(criteria: {
+    type: DISTRICT
+  }) {
+    id
+    name
+    type
+    relationships {
+      id
+      type
+      target {
+        id
+        name
+      }
+    }
+  }
+}
+```
+
+```graphql
 // Get a specific account
 query {
   account(id: "117") {

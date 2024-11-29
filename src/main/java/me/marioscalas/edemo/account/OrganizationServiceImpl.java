@@ -25,17 +25,17 @@ public class OrganizationServiceImpl implements OrganizationService {
         final var districtAccount = accountRepository.findById(districtId).orElseThrow( () -> new IllegalArgumentException("District not found"));
             
         final var schoolAccount = Account.builder().name(schoolName).type(AccountType.SCHOOL).build();
-        schoolAccount.setRelationships(List.of(
+        
+        districtAccount.getRelationships().add(
             AccountRelationship.builder()
                 .source(districtAccount)
                 .target(schoolAccount)
-                .type(AccountRelationshipType.IS_PART_OF)
+                .type(AccountRelationshipType.HAS)
                 .build()
-            )
         );
 
-        return accountRepository.save(
-            schoolAccount
-        );
+        final var saved = accountRepository.save(schoolAccount);
+        accountRepository.save(districtAccount);
+        return saved;
    }
 }

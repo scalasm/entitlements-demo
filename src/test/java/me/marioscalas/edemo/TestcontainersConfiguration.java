@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
-import org.hibernate.dialect.PostgreSQLDialect;
 
 import lombok.RequiredArgsConstructor;
 @TestConfiguration(proxyBeanMethods = false)
@@ -19,7 +18,7 @@ class TestcontainersConfiguration {
     @ServiceConnection
     @RestartScope
     @Bean
-    public PostgreSQLContainer<?> postgreSQLContainer() {
+    PostgreSQLContainer<?> postgreSQLContainer() {
         PostgreSQLContainer<?> postgresContainer = new PostgreSQLContainer<>(DockerImageName.parse("postgres:13.3"))
                 .withDatabaseName("testdb")
                 .withUsername("testuser")

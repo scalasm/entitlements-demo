@@ -10,6 +10,18 @@ type Account {
     id: ID!
     name: String!
     type: AccountType!
+    relationships: [AccountRelationship]!
+}
+
+enum RelationshipType {
+    IS_PART_OF
+}
+
+type AccountRelationship {
+    id: ID!
+    type: RelationshipType!
+    source: Account!
+    target: Account!
 }
 
 input AccountInput {

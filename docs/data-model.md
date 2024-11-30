@@ -12,9 +12,6 @@ Main rules are:
 - An individual is `ENROLLED_IN` class, school, and district accounts
 
 ```mermaid
----
-title: Animal example
----
 classDiagram
     class Account {
         id: String

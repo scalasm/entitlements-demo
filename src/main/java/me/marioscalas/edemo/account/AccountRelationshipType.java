@@ -1,5 +1,7 @@
 package me.marioscalas.edemo.account;
 
 public enum AccountRelationshipType {
-    HAS
+    HAS,
+    ENROLLED_IN,
+    TEACHES
 }

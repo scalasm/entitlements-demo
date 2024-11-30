@@ -1,3 +1,5 @@
+# Accounts and organization
+
 enum AccountType {
     DISTRICT
     SCHOOL
@@ -34,4 +36,23 @@ input AccountInput {
 type Query {
     accounts(criteria: AccountInput): [Account]!
     account(id: ID!): Account
+
+    features: [Feature!]!
+    feature(id: ID!): Feature
+
+    products: [Product!]!
+    product(id: ID!): Product
+}
+
+
+# Products
+type Feature {
+    id: ID!
+    name: String!
+}
+
+type Product {
+    id: ID!
+    name: String!
+    features: [Feature!]!
 }

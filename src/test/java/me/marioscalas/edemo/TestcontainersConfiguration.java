@@ -12,8 +12,11 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 import lombok.RequiredArgsConstructor;
-@TestConfiguration(proxyBeanMethods = false)
-@ContextConfiguration(initializers = {TestcontainersConfiguration.Initializer.class})
+
+
+
+// @TestConfiguration(proxyBeanMethods = false)
+// @ContextConfiguration(initializers = {TestcontainersConfiguration.Initializer.class})
 class TestcontainersConfiguration {
     @ServiceConnection
     @RestartScope

@@ -1,8 +1,6 @@
 # Quick reference for GraphQL queries 
 
-# Organization
-
-## Querying
+# Accounts and organization graph in general
 ```graphql
 // Just get all districts (this should only return one Account)
 query {
@@ -69,6 +67,7 @@ query {
     }
   }
 }
+
 ```graphql
 // Get an individual student (the id will be different for each run!)
 query {
@@ -83,6 +82,30 @@ query {
         type
       }
       type
+    }
+  }
+}
+```
+
+# Product Bundles, Products, Features
+
+```graphql
+query {
+  features {
+    id
+    name
+  }
+}
+```
+
+```graphql
+# Get all products and their features
+query {
+  products {
+    id
+    name
+    features {
+      id
     }
   }
 }

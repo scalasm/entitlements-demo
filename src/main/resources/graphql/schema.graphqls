@@ -1,3 +1,5 @@
+# Accounts and organization
+
 enum AccountType {
     DISTRICT
     SCHOOL
@@ -34,4 +36,60 @@ input AccountInput {
 type Query {
     accounts(criteria: AccountInput): [Account]!
     account(id: ID!): Account
+
+    features: [Feature!]!
+    feature(id: ID!): Feature
+
+    featureSets: [FeatureSet!]!
+    featureSet(id: ID): FeatureSet
+
+    programs: [Program!]!
+    program(code: ID): Program
+
+    products: [Product!]!
+    product(id: ID!): Product
+
+    productMemberships(criteria: ProductMembershipInput): [ProductMembership!]!
+}
+
+# Products
+type Feature {
+    id: ID!
+    name: String!
+}
+
+type FeatureSet {
+    id: ID!
+    name: String!
+    features: [Feature!]!
+}
+
+type Program {
+    code: ID!
+    name: String!
+}
+
+type Product {
+    id: ID!
+    name: String!
+    description: String!
+
+    productMemberships: [ProductMembership!]!
+}
+
+# This is just JPA detail, should not be mapped here because of the DTO
+type ProductMembershipId {
+    product: Product!
+    program: Program!
+    featureSet: FeatureSet!    
+}
+
+type ProductMembership {
+    id: ProductMembershipId!
+}
+
+input ProductMembershipInput {
+    productId: String
+    programCode: String
+    featureSetId: String
 }

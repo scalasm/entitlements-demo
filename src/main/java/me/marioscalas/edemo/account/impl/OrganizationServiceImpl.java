@@ -1,9 +1,16 @@
-package me.marioscalas.edemo.account;
+package me.marioscalas.edemo.account.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import jakarta.transaction.Transactional;
+import me.marioscalas.edemo.account.Account;
+import me.marioscalas.edemo.account.AccountRelationship;
+import me.marioscalas.edemo.account.AccountRelationshipRepository;
+import me.marioscalas.edemo.account.AccountRelationshipType;
+import me.marioscalas.edemo.account.AccountRepository;
+import me.marioscalas.edemo.account.AccountType;
+import me.marioscalas.edemo.account.OrganizationService;
 
 @Service
 @Transactional

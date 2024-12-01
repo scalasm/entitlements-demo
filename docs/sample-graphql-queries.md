@@ -1,8 +1,6 @@
 # Quick reference for GraphQL queries 
 
-# Organization
-
-## Querying
+# Accounts and organization graph in general
 ```graphql
 // Just get all districts (this should only return one Account)
 query {
@@ -69,6 +67,7 @@ query {
     }
   }
 }
+
 ```graphql
 // Get an individual student (the id will be different for each run!)
 query {
@@ -87,3 +86,76 @@ query {
   }
 }
 ```
+
+# Products, FeatureSets, and Features
+
+```graphql
+query {
+  features {
+    id
+    name
+  }
+}
+```
+
+```graphql
+# Get all products and their features
+query {
+  products {
+    id
+    name
+    features {
+      id
+    }
+  }
+}
+```
+
+
+```graphql
+# Get all product bundles and their constituent products 
+query {
+  products {
+    id
+    name
+    description
+    
+    productMemberships {
+      id {
+        product {
+          id
+          name
+        }
+        program {
+          code
+        }
+      }
+    }
+  }
+}
+```
+
+```graphql
+# Get all the features unlocked within a product bundle 
+# TODO Fix this since with Spring Query by Example this does not seem to work.
+query {
+  productMemberships(criteria: {
+    programCode: "MATH_101"
+  }) {
+    id {
+      program {
+        code
+      }
+      featureSet {
+        id
+        name
+        features {
+          id
+        }
+      }
+    }
+  }
+}
+```
+
+

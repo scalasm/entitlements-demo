@@ -5,48 +5,112 @@ import java.util.List;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import me.marioscalas.edemo.account.AccountRelationshipType;
-import me.marioscalas.edemo.account.AccountRepository;
 import me.marioscalas.edemo.account.OrganizationService;
+import me.marioscalas.edemo.product.Feature;
+import me.marioscalas.edemo.product.FeatureSet;
+import me.marioscalas.edemo.product.ProductBundleService;
+import me.marioscalas.edemo.product.FeatureSetService;
+import me.marioscalas.edemo.product.ProgramCodes;
+import me.marioscalas.edemo.product.ProgramService;
+import me.marioscalas.edemo.product.ProductBundleService.ConstituentPart;
 
 @Component
 @RequiredArgsConstructor
+@Transactional
 public class DataLoader implements CommandLineRunner {
 
-    private final AccountRepository accountRepository;
-
     private final OrganizationService organizationService;
+    private final FeatureSetService featureSetService;
+    private final ProgramService programService;
+    private final ProductBundleService productService;
 
     @Override
     public void run(String... args) {
+        createOrganization();
+        createProducts();
+    }
+ 
+    private void createProducts() {
+        var allFeatures = featureSetService.createFeatures(List.of(
+            Feature.builder().id("feature-1").name("Math - Additions").build(),
+            Feature.builder().id("feature-2").name("Math - Subtractions").build(),
+            Feature.builder().id("feature-3").name("Math - Divisions").build(),
+            Feature.builder().id("feature-4").name("Math - Multiplication").build(),
+            Feature.builder().id("feature-5").name("Read - Basics").build(),
+            Feature.builder().id("feature-6").name("Read - Advanced").build()
+        ));
+
+        // Create some sample products 
+        featureSetService.createFeatureSet(
+            FeatureSet.builder().id("basic-math").name("Basic Math")
+            .features( allFeatures.subList(0, 4) )
+            .build()
+        );
+
+        featureSetService.createFeatureSet(
+            FeatureSet.builder().id("basic-reading").name("Elementary Reading")
+            .features(List.of( allFeatures.get(4)))
+            .build()
+        );
+
+        featureSetService.createFeatureSet(
+            FeatureSet.builder().id("adv-reading").name("Advanced Reading")
+            .features(List.of( allFeatures.get(5)))
+            .build()
+        );
+
+        // Ensure we have some well-known programs
+        programService.createProgram(ProgramCodes.DEFAULT_PROGRAM_CODE, "Default program");
+        programService.createProgram(ProgramCodes.MATH_PROGRAM, "Math");
+        programService.createProgram(ProgramCodes.EN_READING_PROGRAM, "Reading (English)");
+    
+        productService.createProduct("ACME Cool Math for Kids", "Cool Math stuff for brilliant kids", List.of(
+            new ConstituentPart(ProgramCodes.MATH_PROGRAM, "basic-math")
+        ));
+
+        productService.createProduct("ACME Reading starter kit", "Reading starter kit for kids", List.of(
+            new ConstituentPart(ProgramCodes.EN_READING_PROGRAM, "basic-reading")
+        ));
+
+        productService.createProduct("ACME Reading Advanced kit", "Reading kit for advanced kids", List.of(
+            new ConstituentPart(ProgramCodes.EN_READING_PROGRAM, "adv-reading")
+        ));
+
+        productService.createProduct("ACME All-in-one Reading kit", "Reading kit for all kinds of kids", List.of(
+            new ConstituentPart(ProgramCodes.EN_READING_PROGRAM, "basic-reading"),
+            new ConstituentPart(ProgramCodes.EN_READING_PROGRAM, "adv-reading")
+        ));
+    }
+        
+    private void createOrganization() {
         // Create a district
         final var district = organizationService.createDistrict("District 1");
 
         // Create a bunch of students
         final List<String> studentIds = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
-            final var studentAccount = organizationService.createStudent("Student " + i + 1);
+            final var studentAccount = organizationService.createStudent("Student " + (i + 1));
             studentIds.add(studentAccount.getId());
             organizationService.relate(studentAccount.getId(), district.getId(), AccountRelationshipType.ENROLLED_IN);  
         }
 
-        // Create a schools, and assign some classes for each school
+        // Create schools, and assign some classes for each school
         final List<String> classIds = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-            final var school = organizationService.createSchool(district.getId(), "School " + i + 1);
+            final var school = organizationService.createSchool(district.getId(), "School " + (i + 1));
 
             for (int j = 0; j < 5; j++) {
-                final var classAccount = organizationService.createClass(school.getId(), String.format("Class %d-%s", i + 1, j + 1));
-
+                final var classAccount = organizationService.createClass(school.getId(), String.format("Class %d-%d", i + 1, j + 1));
                 classIds.add(classAccount.getId());
             }
         }
 
         for (int i = 0; i < studentIds.size(); i++) {
             int classIndex = i % classIds.size();
-
             organizationService.addStudentToClass(studentIds.get(i), classIds.get(classIndex));
         }
     }

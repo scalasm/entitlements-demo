@@ -30,12 +30,11 @@ public class DataLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-//        createOrganization();
+        createOrganization();
         createProducts();
     }
  
-    @Transactional
-    public void createProducts() {
+    private void createProducts() {
         var allFeatures = productService.createFeatures(List.of(
             Feature.builder().id("feature-1").name("Math - Additions").build(),
             Feature.builder().id("feature-2").name("Math - Subtractions").build(),

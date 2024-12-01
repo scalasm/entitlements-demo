@@ -42,8 +42,15 @@ type Query {
 
     products: [Product!]!
     product(id: ID!): Product
-}
 
+    programs: [Program!]!
+    program(code: ID): Program
+
+    productBundles: [ProductBundle!]!
+    productBundle(id: ID): ProductBundle
+
+    productMemberships(criteria: ProductMembershipInput): [ProductMembership!]!
+}
 
 # Products
 type Feature {
@@ -55,4 +62,34 @@ type Product {
     id: ID!
     name: String!
     features: [Feature!]!
+}
+
+type Program {
+    code: ID!
+    name: String!
+}
+
+type ProductBundle {
+    id: ID!
+    name: String!
+    description: String!
+
+    productMemberships: [ProductMembership!]!
+}
+
+# This is just JPA detail, should not be mapped here because of the DTO
+type ProductMembershipId {
+    product: Product!
+    program: Program!
+    productBundle: ProductBundle!    
+}
+
+type ProductMembership {
+    id: ProductMembershipId!
+}
+
+input ProductMembershipInput {
+    productId: String
+    programCode: String
+    productBundleId: String
 }

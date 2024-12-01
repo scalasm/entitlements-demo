@@ -110,3 +110,52 @@ query {
   }
 }
 ```
+
+
+```graphql
+# Get all product bundles and their constituent products 
+query {
+  productBundles {
+    id
+    name
+    description
+    
+    productMemberships {
+      id {
+        product {
+          id
+          name
+        }
+        program {
+          code
+        }
+      }
+    }
+  }
+}
+```
+
+```graphql
+# Get all the features unlocked within a product bundle 
+# TODO Fix this since with Spring Query by Example this does not seem to work.
+query {
+  productMemberships(criteria: {
+    programCode: "MATH_101"
+  }) {
+    id {
+      program {
+        code
+      }
+      product {
+        id
+        name
+        features {
+          id
+        }
+      }
+    }
+  }
+}
+```
+
+

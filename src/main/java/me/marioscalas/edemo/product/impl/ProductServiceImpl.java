@@ -38,7 +38,7 @@ public class ProductServiceImpl implements ProductService {
         
         featureIds.forEach(featureId -> {
             final var feature = featureRepository.findById(featureId).orElseThrow(() -> new IllegalArgumentException("Feature not found"));
-//            product.getFeatures().add(feature);
+            product.getFeatures().add(feature);
         });
 
         productRepository.save(product);
@@ -50,7 +50,7 @@ public class ProductServiceImpl implements ProductService {
         final var product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Product not found")); 
 
         featureIds.forEach(featureId -> {
-//            product.removeFeatureById(featureId);
+            product.removeFeatureById(featureId);
         });
         productRepository.save(product);
     }

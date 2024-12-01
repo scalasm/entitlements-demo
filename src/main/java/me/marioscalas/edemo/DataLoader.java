@@ -9,21 +9,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import me.marioscalas.edemo.account.AccountRelationshipType;
-import me.marioscalas.edemo.account.AccountRepository;
 import me.marioscalas.edemo.account.OrganizationService;
 import me.marioscalas.edemo.product.Feature;
 import me.marioscalas.edemo.product.Product;
+import me.marioscalas.edemo.product.ProductBundleService;
 import me.marioscalas.edemo.product.ProductService;
+import me.marioscalas.edemo.product.ProgramCodes;
+import me.marioscalas.edemo.product.ProgramService;
+import me.marioscalas.edemo.product.ProductBundleService.ConstituentPart;
 
 @Component
 @RequiredArgsConstructor
 @Transactional
 public class DataLoader implements CommandLineRunner {
 
-    private final AccountRepository accountRepository;
-
     private final OrganizationService organizationService;
     private final ProductService productService;
+    private final ProgramService programService;
+    private final ProductBundleService productBundleService;
 
     @Override
     public void run(String... args) {
@@ -34,26 +37,54 @@ public class DataLoader implements CommandLineRunner {
     @Transactional
     public void createProducts() {
         var allFeatures = productService.createFeatures(List.of(
-            Feature.builder().id("feature-1").name("Feature 1").build(),
-            Feature.builder().id("feature-2").name("Feature 2").build(),
-            Feature.builder().id("feature-3").name("Feature 3").build(),
-            Feature.builder().id("feature-4").name("Feature 4").build(),
-            Feature.builder().id("feature-5").name("Feature 5").build(),
-            Feature.builder().id("feature-6").name("Feature 6").build()
+            Feature.builder().id("feature-1").name("Math - Additions").build(),
+            Feature.builder().id("feature-2").name("Math - Subtractions").build(),
+            Feature.builder().id("feature-3").name("Math - Divisions").build(),
+            Feature.builder().id("feature-4").name("Math - Multiplication").build(),
+            Feature.builder().id("feature-5").name("Read - Basics").build(),
+            Feature.builder().id("feature-6").name("Read - Advanced").build()
         ));
 
-        final var product1 = productService.createProduct(
-            Product.builder().id("product-1").name("Product 1")
-            .features( allFeatures.subList(0, 3) )
+        // Create some sample products 
+        productService.createProduct(
+            Product.builder().id("basic-math").name("Basic Math")
+            .features( allFeatures.subList(0, 4) )
             .build()
         );
 
-        final var product2 = productService.createProduct(
-            Product.builder().id("product-2").name("Product 2")
-            .features( allFeatures.subList(2, 4) )
+        productService.createProduct(
+            Product.builder().id("basic-reading").name("Elementary Reading")
+            .features(List.of( allFeatures.get(4)))
             .build()
         );
 
+        productService.createProduct(
+            Product.builder().id("adv-reading").name("Advanced Reading")
+            .features(List.of( allFeatures.get(5)))
+            .build()
+        );
+
+        // Ensure we have some well-known programs
+        programService.createProgram(ProgramCodes.DEFAULT_PROGRAM_CODE, "Default program");
+        programService.createProgram(ProgramCodes.MATH_PROGRAM, "Math");
+        programService.createProgram(ProgramCodes.EN_READING_PROGRAM, "Reading (English)");
+    
+        productBundleService.createProductBundle("ACME Cool Math for Kids", "Cool Math stuff for brilliant kids", List.of(
+            new ConstituentPart(ProgramCodes.MATH_PROGRAM, "basic-math")
+        ));
+
+        productBundleService.createProductBundle("ACME Reading starter kit", "Reading starter kit for kids", List.of(
+            new ConstituentPart(ProgramCodes.EN_READING_PROGRAM, "basic-reading")
+        ));
+
+        productBundleService.createProductBundle("ACME Reading Advanced kit", "Reading kit for advanced kids", List.of(
+            new ConstituentPart(ProgramCodes.EN_READING_PROGRAM, "adv-reading")
+        ));
+
+        productBundleService.createProductBundle("ACME All-in-one Reading kit", "Reading kit for all kinds of kids", List.of(
+            new ConstituentPart(ProgramCodes.EN_READING_PROGRAM, "basic-reading"),
+            new ConstituentPart(ProgramCodes.EN_READING_PROGRAM, "adv-reading")
+        ));
     }
         
     private void createOrganization() {

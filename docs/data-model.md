@@ -19,11 +19,50 @@ classDiagram
         type: AccountType
     }
 
-    class AccountRelationShip {
+    class AccountRelationship {
         id: Long
-        type: AccountRelationShipType
+        type: AccountRelationshipType
     }
 
-    AccountRelationShip --> Account: source
-    AccountRelationShip --> Account: target
+    AccountRelationship --> Account: source
+    AccountRelationship --> Account: target
+```
+
+## Product Bundles, Products, and Features
+
+`Features` represent reusable functionalities or content that can be grouped into a `Product`, and multiple products can be packaged into a `ProductBundle` according to some `Program` of study.
+
+The `ProductMembership` class tracks the triple `<ProductBundle, Product, Program>`.
+
+```mermaid
+classDiagram
+    class Feature {
+        id: String
+        name: String 
+    }
+
+    class Product {
+        id: String
+        name: String 
+    }
+
+    Product *-- Feature: features
+
+    class Program {
+        code: String
+        name: String
+    }
+
+    class ProductBundle {
+        id: String
+        name: String
+        description: String
+    }
+
+    class ProductMembership {
+    }
+
+    ProductBundle *-- ProductMembership: productBundle
+    Product *-- ProductMembership: product
+    Program *-- ProductMembership: program
 ```

@@ -87,7 +87,7 @@ query {
 }
 ```
 
-# Product Bundles, Products, Features
+# Products, FeatureSets, and Features
 
 ```graphql
 query {
@@ -115,7 +115,7 @@ query {
 ```graphql
 # Get all product bundles and their constituent products 
 query {
-  productBundles {
+  products {
     id
     name
     description
@@ -146,7 +146,7 @@ query {
       program {
         code
       }
-      product {
+      featureSet {
         id
         name
         features {

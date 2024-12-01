@@ -19,7 +19,7 @@ import jakarta.persistence.EntityManager;
 public class ProductRepositoryTest {
 
     @Autowired
-    private ProductRepository productRepository;
+    private FeatureSetRepository productRepository;
 
     @Autowired
     private FeatureRepository featureRepository;
@@ -27,13 +27,13 @@ public class ProductRepositoryTest {
     @Autowired
     private EntityManager entityManager;
 
-    private Product product;
+    private FeatureSet product;
     private Feature feature1;
     private Feature feature2;
 
     @BeforeEach
     public void setUp() {
-        product = Product.builder().id("product-1").name("Product 1").build();
+        product = FeatureSet.builder().id("product-1").name("Product 1").build();
         feature1 = Feature.builder().id("feature-1").name("Feature 1").build();
         feature2 = Feature.builder().id("feature-2").name("Feature 2").build();
 

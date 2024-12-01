@@ -11,9 +11,9 @@ import lombok.RequiredArgsConstructor;
 import me.marioscalas.edemo.account.AccountRelationshipType;
 import me.marioscalas.edemo.account.OrganizationService;
 import me.marioscalas.edemo.product.Feature;
-import me.marioscalas.edemo.product.Product;
+import me.marioscalas.edemo.product.FeatureSet;
 import me.marioscalas.edemo.product.ProductBundleService;
-import me.marioscalas.edemo.product.ProductService;
+import me.marioscalas.edemo.product.FeatureSetService;
 import me.marioscalas.edemo.product.ProgramCodes;
 import me.marioscalas.edemo.product.ProgramService;
 import me.marioscalas.edemo.product.ProductBundleService.ConstituentPart;
@@ -24,9 +24,9 @@ import me.marioscalas.edemo.product.ProductBundleService.ConstituentPart;
 public class DataLoader implements CommandLineRunner {
 
     private final OrganizationService organizationService;
-    private final ProductService productService;
+    private final FeatureSetService featureSetService;
     private final ProgramService programService;
-    private final ProductBundleService productBundleService;
+    private final ProductBundleService productService;
 
     @Override
     public void run(String... args) {
@@ -35,7 +35,7 @@ public class DataLoader implements CommandLineRunner {
     }
  
     private void createProducts() {
-        var allFeatures = productService.createFeatures(List.of(
+        var allFeatures = featureSetService.createFeatures(List.of(
             Feature.builder().id("feature-1").name("Math - Additions").build(),
             Feature.builder().id("feature-2").name("Math - Subtractions").build(),
             Feature.builder().id("feature-3").name("Math - Divisions").build(),
@@ -45,20 +45,20 @@ public class DataLoader implements CommandLineRunner {
         ));
 
         // Create some sample products 
-        productService.createProduct(
-            Product.builder().id("basic-math").name("Basic Math")
+        featureSetService.createFeatureSet(
+            FeatureSet.builder().id("basic-math").name("Basic Math")
             .features( allFeatures.subList(0, 4) )
             .build()
         );
 
-        productService.createProduct(
-            Product.builder().id("basic-reading").name("Elementary Reading")
+        featureSetService.createFeatureSet(
+            FeatureSet.builder().id("basic-reading").name("Elementary Reading")
             .features(List.of( allFeatures.get(4)))
             .build()
         );
 
-        productService.createProduct(
-            Product.builder().id("adv-reading").name("Advanced Reading")
+        featureSetService.createFeatureSet(
+            FeatureSet.builder().id("adv-reading").name("Advanced Reading")
             .features(List.of( allFeatures.get(5)))
             .build()
         );
@@ -68,19 +68,19 @@ public class DataLoader implements CommandLineRunner {
         programService.createProgram(ProgramCodes.MATH_PROGRAM, "Math");
         programService.createProgram(ProgramCodes.EN_READING_PROGRAM, "Reading (English)");
     
-        productBundleService.createProductBundle("ACME Cool Math for Kids", "Cool Math stuff for brilliant kids", List.of(
+        productService.createProduct("ACME Cool Math for Kids", "Cool Math stuff for brilliant kids", List.of(
             new ConstituentPart(ProgramCodes.MATH_PROGRAM, "basic-math")
         ));
 
-        productBundleService.createProductBundle("ACME Reading starter kit", "Reading starter kit for kids", List.of(
+        productService.createProduct("ACME Reading starter kit", "Reading starter kit for kids", List.of(
             new ConstituentPart(ProgramCodes.EN_READING_PROGRAM, "basic-reading")
         ));
 
-        productBundleService.createProductBundle("ACME Reading Advanced kit", "Reading kit for advanced kids", List.of(
+        productService.createProduct("ACME Reading Advanced kit", "Reading kit for advanced kids", List.of(
             new ConstituentPart(ProgramCodes.EN_READING_PROGRAM, "adv-reading")
         ));
 
-        productBundleService.createProductBundle("ACME All-in-one Reading kit", "Reading kit for all kinds of kids", List.of(
+        productService.createProduct("ACME All-in-one Reading kit", "Reading kit for all kinds of kids", List.of(
             new ConstituentPart(ProgramCodes.EN_READING_PROGRAM, "basic-reading"),
             new ConstituentPart(ProgramCodes.EN_READING_PROGRAM, "adv-reading")
         ));

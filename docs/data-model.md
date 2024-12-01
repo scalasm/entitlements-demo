@@ -28,11 +28,11 @@ classDiagram
     AccountRelationship --> Account: target
 ```
 
-## Product Bundles, Products, and Features
+## FeatureSet Bundles, Products, and Features
 
-`Features` represent reusable functionalities or content that can be grouped into a `Product`, and multiple products can be packaged into a `ProductBundle` according to some `Program` of study.
+`Features` represent reusable functionalities or content that can be grouped into a `FeatureSet`, and multiple products can be packaged into a `Product` according to some `Program` of study.
 
-The `ProductMembership` class tracks the triple `<ProductBundle, Product, Program>`.
+The `ProductMembership` class tracks the triple `<Product, FeatureSet, Program>`.
 
 ```mermaid
 classDiagram
@@ -41,19 +41,19 @@ classDiagram
         name: String 
     }
 
-    class Product {
+    class FeatureSet {
         id: String
         name: String 
     }
 
-    Product *-- Feature: features
+    FeatureSet *-- Feature: features
 
     class Program {
         code: String
         name: String
     }
 
-    class ProductBundle {
+    class Product {
         id: String
         name: String
         description: String
@@ -62,7 +62,7 @@ classDiagram
     class ProductMembership {
     }
 
-    ProductBundle *-- ProductMembership: productBundle
     Product *-- ProductMembership: product
+    FeatureSet *-- ProductMembership: featureSet
     Program *-- ProductMembership: program
 ```

@@ -1,23 +1,19 @@
 package me.marioscalas.edemo.product;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/** 
- * A product is a set of features grouped together for convenience.
- * It is used as a building block for creating new ProductBundles.
- */
+import java.util.List;
+
 @Entity
 @Table(name = "products")
 @Data
@@ -26,19 +22,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Product {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+
     private String name;
+    private String description;
 
-    @ManyToMany
-    @JoinTable(
-        name = "product_features",
-        joinColumns = @JoinColumn(name = "product_id"),
-        inverseJoinColumns = @JoinColumn(name = "feature_id")
-    )
-    @Builder.Default
-    private List<Feature> features = new ArrayList<>();
-
-    public void removeFeatureById(String featureId) {
-        features.removeIf(feature -> feature.getId().equals(featureId));
-    }
+    @OneToMany(mappedBy = "id.product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProductMembership> productMemberships;
 }

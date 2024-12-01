@@ -8,5 +8,5 @@ public interface ProductBundleService {
         String productId
     ) {}
 
-    ProductBundle createProductBundle(String name, String description, Collection<ConstituentPart> parts);
+    Product createProduct(String name, String description, Collection<ConstituentPart> parts);
 }   

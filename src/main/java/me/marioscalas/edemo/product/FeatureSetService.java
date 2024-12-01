@@ -3,8 +3,8 @@ package me.marioscalas.edemo.product;
 import java.util.Collection;
 import java.util.List;
 
-public interface ProductService {
-    Product createProduct(Product product);
+public interface FeatureSetService {
+    FeatureSet createFeatureSet(FeatureSet product);
     void addFeatures(String productId, Collection<String> featureIds);
     void removeFeatures(String productId, Collection<String> featureIds);
 

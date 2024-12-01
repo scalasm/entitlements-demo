@@ -15,12 +15,12 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class ProductMembershipId implements Serializable {
     @ManyToOne
-    @JoinColumn(name = "product_bundle_id")
-    private ProductBundle productBundle;
-
-    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @ManyToOne
+    @JoinColumn(name = "featureset_id")
+    private FeatureSet featureSet;
 
     @ManyToOne
     @JoinColumn(name = "program_id")

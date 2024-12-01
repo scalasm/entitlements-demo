@@ -1,62 +1,50 @@
 package me.marioscalas.edemo.product.impl;
 
 import java.util.Collection;
-import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
+import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import me.marioscalas.edemo.product.Feature;
-import me.marioscalas.edemo.product.FeatureRepository;
+import me.marioscalas.edemo.product.FeatureSet;
 import me.marioscalas.edemo.product.Product;
-import me.marioscalas.edemo.product.ProductMembershipRepository;
 import me.marioscalas.edemo.product.ProductRepository;
-import me.marioscalas.edemo.product.ProductService;
+import me.marioscalas.edemo.product.ProductBundleService;
+import me.marioscalas.edemo.product.ProductMembership;
+import me.marioscalas.edemo.product.ProductMembershipId;
+import me.marioscalas.edemo.product.ProductMembershipRepository;
+import me.marioscalas.edemo.product.FeatureSetRepository;
+import me.marioscalas.edemo.product.Program;
 import me.marioscalas.edemo.product.ProgramRepository;
+
 
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl implements ProductBundleService {
 
     private final ProductRepository productRepository;
-    private final FeatureRepository featureRepository;
-    private final ProgramRepository programRepository;
     private final ProductMembershipRepository productMembershipRepository;
+    private final ProgramRepository programRepository;
+    private final FeatureSetRepository featureSetRepository;
 
     @Override
-    public Product createProduct(Product product) {
-        return productRepository.save(product);
-    }
+    public Product createProduct(String name, String description, Collection<ConstituentPart> parts) {
+        final var product = productRepository.save(
+            Product.builder().name(name).description(description).build()
+        );
 
-    @Override
-    public void addFeatures(String productId, Collection<String> featureIds) {
-        Assert.notEmpty(featureIds, "You must provide at least one feature id");
-        final var product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Product not found")); 
-        
-        featureIds.forEach(featureId -> {
-            final var feature = featureRepository.findById(featureId).orElseThrow(() -> new IllegalArgumentException("Feature not found"));
-            product.getFeatures().add(feature);
+        parts.forEach(part -> {
+            final Program program = programRepository.findById(part.programCode()).orElseThrow(() -> new IllegalStateException("Program code is unknown: " + part.programCode()));
+            final FeatureSet featureSet = featureSetRepository.findById(part.productId()).orElseThrow(() -> new IllegalStateException("Product id is unknown: " + part.productId()));
+
+            productMembershipRepository.save(
+                ProductMembership.builder().id( 
+                    new ProductMembershipId(product, featureSet, program)
+                ).build()
+            );
         });
 
-        productRepository.save(product);
-    }
-
-    @Override
-    public void removeFeatures(String productId, Collection<String> featureIds) {
-        Assert.notEmpty(featureIds, "You must provide at least one feature id");
-        final var product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Product not found")); 
-
-        featureIds.forEach(featureId -> {
-            product.removeFeatureById(featureId);
-        });
-        productRepository.save(product);
-    }
-
-    @Override
-    public List<Feature> createFeatures(List<Feature> features) {
-        return featureRepository.saveAll(features);
+        return productRepository.findById(product.getId()).get();
     }
 }
